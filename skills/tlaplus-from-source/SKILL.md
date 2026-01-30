@@ -37,13 +37,14 @@ TLA+ models should capture **what** the system does, not **how** it does it:
 │   → Define constants and variables                              │
 │   → Write Init and actions                                      │
 │   → Define Next as disjunction of actions                       │
+│   → Check specification syntax with TLC parser SANY             │
 └─────────────────────────────────────────────────────────────────┘
                               ↓
 ┌─────────────────────────────────────────────────────────────────┐
 │ Phase 4: Propose Properties                                     │
-│   → Safety invariants (what must always be true)                │
+│   → Safety invariants                                           │
+│   → Safety properties (what must be true at all times)          │
 │   → Liveness properties (what must eventually happen)           │
-│   → Temporal properties (ordering constraints)                  │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
@@ -230,13 +231,17 @@ Next ==
 Spec == Init /\ [][Next]_vars
 ```
 
+### Step 3.7: Check Specification Syntax with TLC Parser SANY
+
+If available, check specification syntax with TLA+ MCP tool `tlaplus_mcp_sany_parse`.
+
 ---
 
 ## Phase 4: Propose Properties
 
 ### Step 4.1: Safety Invariants
 
-Safety properties state what must **always** be true:
+Safety invariants are state exspressions that must be true in every state:
 
 ```tla
 \* No negative counter
@@ -251,6 +256,8 @@ StateConsistency ==
     state = State_Done => counter > 0
 ```
 
+Check safety invariants with TLA+ MCP tool `tlaplus_mcp_tlc_check`.
+
 **Common safety patterns:**
 | Pattern | Invariant |
 |---------|-----------|
@@ -258,7 +265,20 @@ StateConsistency ==
 | Mutual exclusion | At most one thread in critical section |
 | No resource leak | Resources acquired = resources released |
 | State validity | State machine only in valid states |
-| Ordering | If A happened, B must have happened before |
+
+### Step 4.2: Safety Properties
+
+Safety properties are temporal properties that state what must be true at all times:
+
+```tla
+
+\* Actions happen in order
+OrderedActions ==
+    [][pc = PC_Step1 => (pc' = PC_Step2)]_pc
+
+```
+
+Check safety properties with TLA+ MCP tool `tlaplus_mcp_tlc_check`.
 
 ### Step 4.2: Liveness Properties
 
@@ -273,24 +293,12 @@ EventualCompletion ==
 EventualProgress ==
     counter < MaxValue ~> counter >= MaxValue
 
-\* No deadlock
-NoDeadlock ==
-    [](ENABLED(Next))
-```
-
-### Step 4.3: Temporal Properties
-
-Temporal properties state ordering constraints:
-
-```tla
 \* If disconnect is requested, it eventually completes
 DisconnectCompletes ==
     [](disconnectRequested => <>(state = State_Disconnected))
-
-\* Actions happen in order
-OrderedActions ==
-    [](pc = PC_Step1 => <>(pc = PC_Step2))
 ```
+
+Check liveness properties with TLA+ MCP tool `tlaplus_mcp_tlc_check`.
 
 ---
 
