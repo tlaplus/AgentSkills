@@ -9,7 +9,7 @@ Note 1: "Agent skills" is meant in a general sense, and is not tied to any speci
 Note 2: The [TLA+ VSCode/Cursor extension](https://github.com/tlaplus/vscode-tlaplus) already bundles several [MCP](https://modelcontextprotocol.io/specification/2025-06-18/server/resources) knowledge base [articles](https://github.com/tlaplus/vscode-tlaplus/tree/master/resources/knowledgebase). Eventually, we should find a way to unify them.
 
 Note 3: The [TLA+ VSCode/Cursor extension](https://github.com/tlaplus/vscode-tlaplus) also contains [TLA+ MCP server](https://github.com/tlaplus/vscode-tlaplus/blob/master/src/lm/MCPServer.ts) with lots of useful tools. Contributions are very welcome to add additional tools to it.
-
+In addition, there now exists a prototype of a headless stdio TLA+ MCP server at https://github.com/tlaplus/tlaplus/pull/1296. This pull request also includes instructions on how to download a recent tla2tools.jar.
 
 ## Overview
 
